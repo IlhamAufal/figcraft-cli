@@ -1,23 +1,23 @@
-# FigCraft skill for AI agents
+# Skill FigCraft untuk AI Agent
 
-An agent skill that teaches coding agents how to design with
-[FigCraft](https://github.com/storytold/figcraft), the open-source, offline, Figma-style design app,
-through its built-in MCP server.
+Skill agent yang mengajarkan coding agent cara mendesain dengan
+[FigCraft](https://github.com/storytold/figcraft), aplikasi desain open-source offline bergaya Figma,
+melalui server MCP bawaan-nya.
 
-A skill and an MCP server are two separate pieces, and you need both:
+Skill dan server MCP adalah dua komponen terpisah, dan Anda membutuhkan keduanya:
 
-| Piece | What it is | Where it lives |
+| Komponen | Fungsinya | Lokasi |
 |---|---|---|
-| **Skill** (this repo) | Instructions: conventions, workflow, gotchas | `~/.agents/skills/figcraft/` |
-| **MCP server** (ships with FigCraft) | The tools: `create_node`, `export`, `screenshot`… | your agent's MCP config |
+| **Skill** (repo ini) | Instruksi: konvensi, alur kerja, hal-hal yang perlu diperhatikan | `~/.agents/skills/figcraft/` |
+| **Server MCP** (disertakan bersama FigCraft) | Alat-alatnya: `create_node`, `export`, `screenshot`… | konfigurasi MCP agent Anda |
 
-Without the skill, the agent has the tools but guesses the conventions. Without the MCP server, the
-agent knows what to do but can only fall back to the `figcraft-cli` command line.
+Tanpa skill, agent punya alat-alatnya tapi harus menebak konvensinya. Tanpa server MCP, agent tahu
+apa yang harus dilakukan tapi hanya bisa memakai perintah `figcraft-cli` di command line.
 
-## 1. Install FigCraft
+## 1. Instal FigCraft
 
-Download an installer from the [FigCraft releases](https://github.com/storytold/figcraft/releases),
-or build the CLI from source:
+Unduh installer dari [rilis FigCraft](https://github.com/storytold/figcraft/releases),
+atau bangun CLI dari source:
 
 ```
 git clone https://github.com/storytold/figcraft
@@ -25,28 +25,29 @@ cd figcraft
 cargo build --release -p figcraft-cli
 ```
 
-The Windows installer puts `figcraft-cli.exe` in `C:\Program Files\FigCraft\`.
+Installer Windows menempatkan `figcraft-cli.exe` di `C:\Program Files\FigCraft\`.
 
-## 2. Install the skill
+## 2. Instal skill
 
-With the [`skills`](https://skills.sh/) CLI:
+Dengan CLI [`skills`](https://skills.sh/):
 
 ```
-npx skills add <your-username>/figcraft-skill -g
+npx skills add <username-anda>/figcraft-skill -g
 ```
 
-Or copy `skills/figcraft/` into the skills folder your agent reads (for many agents that is
-`~/.agents/skills/`):
+Atau salin `skills/figcraft/` ke folder skills yang dibaca agent Anda (untuk banyak agent, lokasinya
+ada di `~/.agents/skills/`):
 
 ```powershell
 Copy-Item -Recurse skills\figcraft $HOME\.agents\skills\figcraft
 ```
 
-Check it with `npx skills ls -g`.
+Cek dengan `npx skills ls -g`.
 
-## 3. Register the MCP server
+## 3. Daftarkan server MCP
 
-The command is always `figcraft-cli mcp`. Only the place you register it differs per agent.
+Perintahnya selalu `figcraft-cli mcp`. Yang berbeda hanya tempat mendaftarkannya, tergantung agent
+yang digunakan.
 
 **Claude Code**
 
@@ -54,7 +55,7 @@ The command is always `figcraft-cli mcp`. Only the place you register it differs
 claude mcp add figcraft -- "C:\Program Files\FigCraft\figcraft-cli.exe" mcp
 ```
 
-**Oh My Pi (OMP)**: run `/mcp add`, pick *User level*, then fill in:
+**Oh My Pi (OMP)**: jalankan `/mcp add`, pilih *User level*, lalu isi:
 
 ```
 Name:      figcraft
@@ -63,7 +64,7 @@ Command:   C:\Program Files\FigCraft\figcraft-cli.exe
 Arguments: mcp
 ```
 
-**Any agent that reads an `mcpServers` JSON file**
+**Agent yang membaca file JSON `mcpServers`**
 
 ```json
 {
@@ -76,44 +77,44 @@ Arguments: mcp
 }
 ```
 
-Config formats differ between agents (some use an array for `command`, Codex uses TOML), so check
-your agent's MCP docs if this shape is rejected.
+Format konfigurasi berbeda antar agent (sebagian menggunakan array untuk `command`, Codex memakai
+TOML), jadi cek dokumentasi MCP agent Anda jika format ini ditolak.
 
-### Headless or live
+### Headless atau live
 
-- **Headless** (the config above): the agent works on an in-memory document. Nothing reaches disk
-  until it saves or exports, so tell it where to save.
-- **Live**: start the app with `figcraft --control 7979`, and register the server with
-  `args: ["mcp", "--attach", "7979"]`. You watch every change in the app window, and several agents
-  can share the same document.
+- **Headless** (konfigurasi di atas): agent bekerja pada dokumen di memori. Tidak ada yang tersimpan
+  ke disk sampai di-save atau diekspor, jadi beritahu agent ke mana harus menyimpan.
+- **Live**: jalankan aplikasi dengan `figcraft --control 7979`, dan daftarkan server dengan
+  `args: ["mcp", "--attach", "7979"]`. Anda bisa melihat setiap perubahan di jendela aplikasi, dan
+  beberapa agent bisa berbagi dokumen yang sama.
 
-To restrict where the agent can read and write files, add
-`--automation-read-root <dir>` and `--automation-write-root <dir>` to the args.
+Untuk membatasi folder yang bisa dibaca dan ditulis agent, tambahkan
+`--automation-read-root <dir>` dan `--automation-write-root <dir>` ke args.
 
-## 4. Try it
+## 4. Coba
 
-> Use FigCraft to design a 375×812 mobile home screen with a greeting, a search field and a blue
-> button. Save it to `C:\designs\home.figcraft` and export a PNG next to it.
+> Gunakan FigCraft untuk mendesain layar utama mobile 375×812 dengan sapaan, kolom pencarian, dan
+> tombol biru. Simpan ke `C:\designs\home.figcraft` dan ekspor PNG di sebelahnya.
 
-## Updating the reference
+## Memperbarui referensi
 
-`skills/figcraft/references/mcp.md` is a copy of FigCraft's `docs/mcp.md`. It changes as FigCraft
-does. To refresh it:
+`skills/figcraft/references/mcp.md` adalah salinan dari `docs/mcp.md` milik FigCraft. File ini
+berubah seiring perkembangan FigCraft. Untuk memperbaruinya:
 
 ```powershell
 Invoke-WebRequest https://raw.githubusercontent.com/storytold/figcraft/HEAD/docs/mcp.md `
   -OutFile skills\figcraft\references\mcp.md
 ```
 
-If you change the headings in that file, update the reference table at the bottom of `SKILL.md`.
+Jika Anda mengubah heading di file tersebut, perbarui tabel referensi di bagian bawah `SKILL.md`.
 
-## Credits and license
+## Kredit dan lisensi
 
-- `skills/figcraft/references/mcp.md` is copied from the FigCraft documentation, © 2026 ArtCraft
-  Team and the FigCraft contributors, which is dual-licensed under MIT or Apache-2.0. See the
-  upstream [`LICENSE-MIT`](https://github.com/storytold/figcraft/blob/main/LICENSE-MIT),
-  [`LICENSE-APACHE`](https://github.com/storytold/figcraft/blob/main/LICENSE-APACHE), and
-  [`NOTICE`](https://github.com/storytold/figcraft/blob/main/NOTICE).
-- The ArtCraft name and logos are trademarks of the ArtCraft Team and are not part of this repo.
-- The rest of this repo (`SKILL.md`, this README) is licensed under the license file you add here.
-- This is an unofficial community skill and is not affiliated with the FigCraft project.
+- `skills/figcraft/references/mcp.md` disalin dari dokumentasi FigCraft, © 2026 ArtCraft Team dan
+  kontributor FigCraft, yang dilisensikan ganda di bawah MIT atau Apache-2.0. Lihat
+  [`LICENSE-MIT`](https://github.com/storytold/figcraft/blob/main/LICENSE-MIT),
+  [`LICENSE-APACHE`](https://github.com/storytold/figcraft/blob/main/LICENSE-APACHE), dan
+  [`NOTICE`](https://github.com/storytold/figcraft/blob/main/NOTICE) di upstream.
+- Nama dan logo ArtCraft adalah merek dagang dari ArtCraft Team dan bukan bagian dari repo ini.
+- Sisa repo ini (`SKILL.md` dan README ini) dilisensikan di bawah file lisensi yang Anda tambahkan.
+- Ini adalah skill komunitas tidak resmi dan tidak berafiliasi dengan proyek FigCraft.
